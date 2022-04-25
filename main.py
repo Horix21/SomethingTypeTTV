@@ -4,9 +4,7 @@ import time
 import requests
 
 def request():
-    api_url = "http://localhost:3000/quotes"
-    response = requests.get(api_url)
-    r = response.json()['quote']
+    
     return str(r)
 
 def startGame(stdscr):
@@ -27,7 +25,16 @@ def displayText(stdscr, targetText, currentText, wpm=0):
         stdscr.addstr(0, i, char, color)
 
 def test(stdscr):
-    targetText = request()
+    
+    api_url = "http://localhost:3000/quotes"
+    try:
+        response = requests.get(api_url)
+    except Exception as e:
+        stdscr.addstr(4, 0, "Could not connect to server API. Likely caused by server not running. Press control + c to exit.", curses.color_pair(2))
+        return
+
+    targetText = str(response.json()['quote'])
+
     currentText = []
     wpm = 0
     startTime = time.time()
